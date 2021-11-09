@@ -33,6 +33,10 @@ public abstract class GridRepo {
                 return new Door(pos);
             case BombRangeInc:
                 return new Bomb_range_inc(pos);
+            case Box:
+                return new Box(pos);
+            case Monster:
+                return new Monster(pos);
             default:
                 return null;
                 // throw new RuntimeException("EntityCode " + entityCode.name() + " not processed");
