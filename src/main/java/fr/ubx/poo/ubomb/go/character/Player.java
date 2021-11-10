@@ -6,6 +6,7 @@ package fr.ubx.poo.ubomb.go.character;
 
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
+import fr.ubx.poo.ubomb.game.Grid;
 import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.Movable;
@@ -40,6 +41,12 @@ public class Player extends GameObject implements Movable {
     }
 
     public final boolean canMove(Direction direction) {
+        Position pos= direction.nextPosition(super.getPosition());
+        System.out.println("pos="+pos);
+        Grid grid = game.getGrid();
+        if (pos.getX()<0 || pos.getX() > grid.getWidth() -1 || pos.getY() < 0 || pos.getY() > grid.getHeight()-1){
+            return false;
+        }
         return true;
     }
 
