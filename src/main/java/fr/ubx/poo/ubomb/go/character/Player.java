@@ -10,9 +10,7 @@ import fr.ubx.poo.ubomb.game.Grid;
 import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.Movable;
-import fr.ubx.poo.ubomb.go.decor.Decor;
-import fr.ubx.poo.ubomb.go.decor.Monster;
-import fr.ubx.poo.ubomb.go.decor.Princess;
+import fr.ubx.poo.ubomb.go.decor.*;
 
 
 public class Player extends GameObject implements Movable {
@@ -48,6 +46,10 @@ public class Player extends GameObject implements Movable {
         System.out.println("pos="+pos);
         Grid grid = game.getGrid();
         if (pos.getX()<0 || pos.getX() > grid.getWidth() -1 || pos.getY() < 0 || pos.getY() > grid.getHeight()-1){
+            return false;
+        }Decor element= grid.get(pos);
+
+        if(element instanceof Tree || element instanceof Stone || element instanceof Box){
             return false;
         }
         return true;
