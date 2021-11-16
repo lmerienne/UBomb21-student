@@ -37,6 +37,8 @@ public abstract class GridRepo {
                 return new Box(pos);
             case Monster:
                 return new Monster(pos);
+            case Princess:
+                return new Princess(pos);
             default:
                 return null;
                 // throw new RuntimeException("EntityCode " + entityCode.name() + " not processed");

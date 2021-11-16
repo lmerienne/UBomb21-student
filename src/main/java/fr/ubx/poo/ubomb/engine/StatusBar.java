@@ -5,6 +5,7 @@
 package fr.ubx.poo.ubomb.engine;
 
 import fr.ubx.poo.ubomb.game.Game;
+import fr.ubx.poo.ubomb.go.character.Player;
 import fr.ubx.poo.ubomb.view.ImageResource;
 import javafx.scene.Group;
 import javafx.scene.effect.DropShadow;
@@ -76,8 +77,10 @@ public class StatusBar {
     }
 
     public void update(Game game) {
+        Player player = this.game.getPlayer();
+        String nbLives = String.valueOf(player.getLives());
         updateLevel(1);
-        lives.setText("?");
+        lives.setText(nbLives);
         bombRange.setText("?");
         availableBombs.setText("?");
         keys.setText("?");
