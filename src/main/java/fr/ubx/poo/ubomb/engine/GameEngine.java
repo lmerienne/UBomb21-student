@@ -6,8 +6,13 @@ package fr.ubx.poo.ubomb.engine;
 
 import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
+import fr.ubx.poo.ubomb.game.Position;
+import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.character.Player;
-import fr.ubx.poo.ubomb.go.decor.Decor;
+import fr.ubx.poo.ubomb.go.decor.*;
+import fr.ubx.poo.ubomb.go.decor.bonus.Bomb_range_inc;
+import fr.ubx.poo.ubomb.go.decor.bonus.Bonus;
+import fr.ubx.poo.ubomb.go.decor.bonus.Key;
 import fr.ubx.poo.ubomb.view.*;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -21,6 +26,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -98,16 +104,139 @@ public final class GameEngine {
             }
         };
     }
-
-    private void checkExplosions() {
+    private void checkExplosions(){}
+    private boolean checkBoom(Position pos) {
+        if (game.getGrid().get(pos)instanceof Box || game.getGrid().get(pos)instanceof Monster|| game.getGrid().get(pos)instanceof Bonus||game.getGrid().get(pos)==null){
+            return true;
+        }
+        return false;
     }
-
+    private boolean checkDestruction(Position pos){
+        if(game.getGrid().get(pos) instanceof Key){
+            return false;
+        }
+        if (game.getGrid().get(pos) instanceof Box||game.getGrid().get(pos) instanceof Bonus||game.getGrid().get(pos) instanceof Monster){
+            return true;
+        }
+        return false;
+    }
     private void createNewBombs(long now) {
+
     }
 
     private void checkCollision(long now) {
     }
+    private void bombPlaced(){
+        GameObject bomb= new Bomb_range_inc(player.getPosition());
+        /*GameObject ex_under= new Explosion(new Position(player.getPosition().getX(),player.getPosition().getY()-1));
+        GameObject ex_up= new Explosion(new Position(player.getPosition().getX(),player.getPosition().getY()+1));
+        GameObject ex_left= new Explosion(new Position(player.getPosition().getX()-1,player.getPosition().getY()));
+        GameObject ex_right= new Explosion(new Position(player.getPosition().getX()+1,player.getPosition().getY()));*/
+        for (int i = 1; i<= 1;i++){
+            GameObject ex_under= new Explosion(new Position(player.getPosition().getX(),player.getPosition().getY()-i));
+            sprites.add(SpriteFactory.create(layer, bomb));
+            if (checkBoom(ex_under.getPosition())&& game.inside(ex_under.getPosition())){
+                Sprite ex= SpriteFactory.create(layer, ex_under);
+                sprites.add(ex);
+                if (checkDestruction(ex_under.getPosition())) {
+                    Decor decor=game.getGrid().get(ex_under.getPosition());
+                    decor.remove();
+                    game.getGrid().remove(ex_under.getPosition());
+                }
 
+                ex.remove();
+                new java.util.Timer().schedule(
+                        new java.util.TimerTask() {
+                            @Override
+                            public void run() {
+                                // your code here
+
+                               ex.getGameObject().remove();
+                            }
+                        },
+                        1000
+                );
+                //sprites.remove(sprites.size()-1);
+            }
+            sprites.get(sprites.size()-1).remove();
+            GameObject ex_up= new Explosion(new Position(player.getPosition().getX(),player.getPosition().getY()+i));
+            if(checkBoom(ex_up.getPosition())&& game.inside(ex_up.getPosition())){
+                Sprite ex=SpriteFactory.create(layer, ex_up);
+                sprites.add(ex);
+                if (checkDestruction(ex_up.getPosition())) {
+                    Decor decor=game.getGrid().get(ex_up.getPosition());
+                    decor.remove();
+                    game.getGrid().remove(ex_up.getPosition());
+
+                }
+               // sprites.remove(sprites.size()-1);
+                ex.remove();
+                new java.util.Timer().schedule(
+                        new java.util.TimerTask() {
+                            @Override
+                            public void run() {
+                                // your code here
+                                ex.getGameObject().remove();
+                            }
+                        },
+                        1000
+                );
+            }
+            GameObject ex_left= new Explosion(new Position(player.getPosition().getX()-i,player.getPosition().getY()));
+            if (checkBoom(ex_left.getPosition())&& game.inside(ex_left.getPosition())){
+                Sprite ex=SpriteFactory.create(layer, ex_left);
+                sprites.add(ex);
+                if (checkDestruction(ex_left.getPosition())) {
+                    Decor decor=game.getGrid().get(ex_left.getPosition());
+                    decor.remove();
+                    game.getGrid().remove(ex_left.getPosition());
+
+                }
+               // sprites.remove(sprites.size()-1);
+                ex.remove();
+                new java.util.Timer().schedule(
+                        new java.util.TimerTask() {
+                            @Override
+                            public void run() {
+                                // your code here
+                                ex.getGameObject().remove();
+                            }
+                        },
+                        1000
+                );
+            }
+            GameObject ex_right= new Explosion(new Position(player.getPosition().getX()+i,player.getPosition().getY()));
+            if (checkBoom(ex_right.getPosition())&& game.inside(ex_right.getPosition())){
+                Sprite ex=SpriteFactory.create(layer, ex_right);
+                sprites.add(ex);
+                if (checkDestruction(ex_right.getPosition())) {
+                    Decor decor=game.getGrid().get(ex_right.getPosition());
+                    decor.remove();
+                    game.getGrid().remove(ex_right.getPosition());
+
+                }
+                //sprites.remove(sprites.size()-1);
+                ex.remove();
+                new java.util.Timer().schedule(
+                        new java.util.TimerTask() {
+                            @Override
+                            public void run() {
+                                // your code here
+                                ex.getGameObject().remove();
+                            }
+                        },
+                        1000
+                );
+            }
+        }
+
+        /*sprites.add(SpriteFactory.create(layer, ex_under));
+        sprites.add(SpriteFactory.create(layer, ex_up));
+        sprites.add(SpriteFactory.create(layer, ex_left));
+
+*/
+
+    }
     private void processInput(long now) {
         if (input.isExit()) {
             gameLoop.stop();
@@ -121,8 +250,11 @@ public final class GameEngine {
             player.requestMove(Direction.RIGHT);
         } else if (input.isMoveUp()) {
             player.requestMove(Direction.UP);
+        }else if (input.isBomb()){
+            bombPlaced();
             input.clear();
         }
+
         input.clear();
     }
 

@@ -11,6 +11,11 @@ import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.Movable;
 import fr.ubx.poo.ubomb.go.decor.*;
+import fr.ubx.poo.ubomb.go.decor.bonus.Bomb_range_inc;
+import fr.ubx.poo.ubomb.view.Sprite;
+import fr.ubx.poo.ubomb.view.SpriteFactory;
+
+import java.util.LinkedList;
 
 
 public class Player extends GameObject implements Movable {
@@ -45,14 +50,11 @@ public class Player extends GameObject implements Movable {
         Position pos= direction.nextPosition(super.getPosition());
         System.out.println("pos="+pos);
         Grid grid = game.getGrid();
-        if (pos.getX()<0 || pos.getX() > grid.getWidth() -1 || pos.getY() < 0 || pos.getY() > grid.getHeight()-1){
-            return false;
-        }Decor element= grid.get(pos);
-
+        Decor element= grid.get(pos);
         if(element instanceof Tree || element instanceof Stone || element instanceof Box){
             return false;
         }
-        return true;
+        return game.inside(pos);
     }
 
     public void update(long now) {
@@ -82,6 +84,9 @@ public class Player extends GameObject implements Movable {
 
     @Override
     public void explode() {
+        Player player = this.game.getPlayer();
+        Position pos = player.getPosition();
+
     }
 
     // Example of methods to define by the player

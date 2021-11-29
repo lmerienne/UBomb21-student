@@ -51,6 +51,7 @@ public class Game {
             Position playerPosition = new Position(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]));
             player = new Player(this, playerPosition, playerLives);
 
+
         } catch (IOException ex) {
             System.err.println("Error loading configuration");
             throw new RuntimeException("Invalid configuration format");
@@ -74,6 +75,9 @@ public class Game {
     }
 
     public boolean inside(Position position) {
+        if (position.getX()<0 || position.getX() > grid.getWidth() -1 || position.getY() < 0 || position.getY() > grid.getHeight()-1){
+            return false;
+        }
         return true;
     }
 

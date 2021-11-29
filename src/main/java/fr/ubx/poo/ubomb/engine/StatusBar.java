@@ -79,11 +79,11 @@ public class StatusBar {
     public void update(Game game) {
         Player player = this.game.getPlayer();
         String nbLives = String.valueOf(player.getLives());
-        updateLevel(1);
+        updateLevel(this.game.levels);
         lives.setText(nbLives);
-        bombRange.setText("?");
-        availableBombs.setText("?");
-        keys.setText("?");
+        bombRange.setText("1");
+        availableBombs.setText(String.valueOf(game.bombBagCapacity));
+        keys.setText("0");
     }
 
 }
