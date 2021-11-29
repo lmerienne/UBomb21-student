@@ -51,7 +51,11 @@ public class Player extends GameObject implements Movable {
         System.out.println("pos="+pos);
         Grid grid = game.getGrid();
         Decor element= grid.get(pos);
-        if(element instanceof Tree || element instanceof Stone || element instanceof Box){
+        if(element instanceof Box){
+            Box box= (Box)element;
+            return box.moveBox(game,direction);
+        }
+        if(element instanceof Tree || element instanceof Stone){
             return false;
         }
         return game.inside(pos);
