@@ -34,6 +34,14 @@ public final class SpriteFactory {
             return new Sprite(layer, PRINCESS.getImage(), gameObject);
         if (gameObject instanceof Explosion)
             return new Sprite(layer, EXPLOSION.getImage(), gameObject);
+        if(gameObject instanceof Bomb_0)
+            return new Sprite(layer,BOMB_0.getImage(),gameObject);
+        if(gameObject instanceof Bomb_1)
+            return new Sprite(layer,BOMB_1.getImage(),gameObject);
+        if(gameObject instanceof Bomb_2)
+            return new Sprite(layer,BOMB_2.getImage(),gameObject);
+        if(gameObject instanceof Bomb_3)
+            return new Sprite(layer,BOMB_3.getImage(),gameObject);
         throw new RuntimeException("Unsupported sprite for decor " + gameObject);
     }
 }
