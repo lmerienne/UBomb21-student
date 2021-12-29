@@ -49,7 +49,7 @@ public class Game {
             if (tokens.length != 2)
                 throw new RuntimeException("Invalid configuration format");
             Position playerPosition = new Position(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]));
-            player = new Player(this, playerPosition, playerLives);
+            player = new Player(this, playerPosition, playerLives,bombBagCapacity);
 
 
         } catch (IOException ex) {

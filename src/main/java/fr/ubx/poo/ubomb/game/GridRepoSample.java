@@ -19,7 +19,7 @@ public class GridRepoSample extends GridRepo {
             {Empty, Empty, Empty, Empty, Empty, Empty, BombRangeInc, Empty, Empty, Empty, Empty, Empty},
             {Stone, Stone, Stone, Stone, Stone, Empty, Box, Box, Stone, Stone, Box, Stone},
             {Empty, Heart, Empty, Empty, Box, Empty, Empty, Empty, Empty, Empty, Empty, Empty},
-            {Monster, Empty, Empty, Empty, Box, Empty, Empty, Empty, BombNumberInc, Empty, Empty, Monster}
+            {Monster, Empty, BombNumberDec, Empty, Box, Empty, Empty, Empty, BombNumberInc, Empty, Empty, Monster}
     };
 
     public GridRepoSample(Game game) {

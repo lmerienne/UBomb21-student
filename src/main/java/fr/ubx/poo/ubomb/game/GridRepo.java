@@ -1,8 +1,7 @@
 package fr.ubx.poo.ubomb.game;
 
 import fr.ubx.poo.ubomb.go.decor.*;
-import fr.ubx.poo.ubomb.go.decor.bonus.Bomb_range_inc;
-import fr.ubx.poo.ubomb.go.decor.bonus.Key;
+import fr.ubx.poo.ubomb.go.decor.bonus.*;
 
 
 public abstract class GridRepo {
@@ -32,13 +31,21 @@ public abstract class GridRepo {
             case DoorPrevOpened:
                 return new Door(pos);
             case BombRangeInc:
-                return new Bomb_range_inc(pos);
+                return new RangeInc(pos);
             case Box:
                 return new Box(pos);
             case Monster:
                 return new Monster(pos);
             case Princess:
                 return new Princess(pos);
+            case BombNumberInc:
+                return new BombInc(pos);
+            case BombNumberDec:
+                return new BombDec(pos);
+            case Heart:
+                return new Hearth(pos);
+            case BombRangeDec:
+                return new RangeDec(pos);
             default:
                 return null;
                 // throw new RuntimeException("EntityCode " + entityCode.name() + " not processed");

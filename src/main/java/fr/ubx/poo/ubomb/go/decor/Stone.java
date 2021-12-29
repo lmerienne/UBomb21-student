@@ -10,4 +10,5 @@ public class Stone extends Decor {
     public Stone(Position position) {
         super(position);
     }
+
 }

@@ -11,23 +11,22 @@ import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.Movable;
 import fr.ubx.poo.ubomb.go.decor.*;
-import fr.ubx.poo.ubomb.go.decor.bonus.Bomb_range_inc;
-import fr.ubx.poo.ubomb.view.Sprite;
-import fr.ubx.poo.ubomb.view.SpriteFactory;
-
-import java.util.LinkedList;
+import fr.ubx.poo.ubomb.go.decor.bonus.*;
 
 
 public class Player extends GameObject implements Movable {
 
     private Direction direction;
     private boolean moveRequested = false;
-    private int lives;
+    private int lives,bombcapacity;
+    private int bombrange=1;
 
-    public Player(Game game, Position position, int lives) {
+
+    public Player(Game game, Position position, int lives, int bombcapacity) {
         super(game, position);
         this.direction = Direction.DOWN;
         this.lives = lives;
+        this.bombcapacity=bombcapacity;
     }
 
     public int getLives() {
@@ -51,6 +50,7 @@ public class Player extends GameObject implements Movable {
         System.out.println("pos="+pos);
         Grid grid = game.getGrid();
         Decor element= grid.get(pos);
+        takeBonus();
         if(element instanceof Box){
             Box box= (Box)element;
             return box.moveBox(game,direction);
@@ -88,15 +88,33 @@ public class Player extends GameObject implements Movable {
 
     @Override
     public void explode() {
-        Player player = this.game.getPlayer();
-        Position pos = player.getPosition();
+        this.lives-=1;
 
     }
 
     // Example of methods to define by the player
     public void takeDoor(int gotoLevel) {}
     public void takeKey() {}
-    public void takeBonus(){}
+    public void takeBonus(){
+        if (game.getGrid().get(getPosition()) instanceof Hearth){
+            this.lives+=1;
+        }
+        if (game.getGrid().get(getPosition()) instanceof BombInc){
+            this.bombcapacity+=1;
+        }
+        if (game.getGrid().get(getPosition()) instanceof BombDec && bombcapacity>0){
+            this.bombcapacity-=1;
+        }
+        if (game.getGrid().get(getPosition()) instanceof RangeInc){
+            this.bombrange+=1;
+        }
+        if (game.getGrid().get(getPosition()) instanceof RangeDec && bombrange>1){
+            this.bombrange-=1;
+        }
+
+
+
+    }
 
 
     public boolean isWinner() {
@@ -109,4 +127,17 @@ public class Player extends GameObject implements Movable {
         }
         return false;
     }
+ public int getBombcapacity(){
+        return bombcapacity;
+    }
+    public void moreBomb(){
+        bombcapacity+=1;
+    }
+    public void lessBomb(){
+        bombcapacity-=1;
+    }
+    public int getBombRange(){return bombrange;}
+    public void moreRange(){bombrange+=1;}
+    public void lessRange(){bombrange-=1;}
+
 }
