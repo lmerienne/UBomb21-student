@@ -10,18 +10,12 @@ import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Grid;
 import fr.ubx.poo.ubomb.game.Position;
-import fr.ubx.poo.ubomb.go.GameObject;
-import fr.ubx.poo.ubomb.go.Movable;
-import fr.ubx.poo.ubomb.go.decor.*;
-import fr.ubx.poo.ubomb.go.decor.bonus.*;
 
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Properties;
 
 public class Monster extends Decor {
@@ -36,7 +30,7 @@ public class Monster extends Decor {
         Position pos = direction.nextPosition(getPosition());
         Grid grid = game.getGrid();
         Decor element = grid.get(pos);
-        if (element instanceof Tree || element instanceof Stone || element instanceof Box || element instanceof Door) {
+        if (element instanceof Tree || element instanceof Stone || element instanceof Box || element instanceof DoorClose) {
             return false;
         }
         return game.inside(pos);

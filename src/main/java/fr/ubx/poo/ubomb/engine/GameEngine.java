@@ -13,6 +13,7 @@ import fr.ubx.poo.ubomb.go.decor.*;
 import fr.ubx.poo.ubomb.go.decor.bonus.Bonus;
 import fr.ubx.poo.ubomb.go.decor.bonus.Key;
 import fr.ubx.poo.ubomb.view.*;
+import fr.ubx.poo.ubomb.game.Grid;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.scene.Group;
@@ -25,6 +26,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+import java.io.FileNotFoundException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,23 +36,28 @@ import java.io.IOException;
 
 public final class GameEngine {
 
+    public static int level;
     private static AnimationTimer gameLoop;
     private final String windowTitle;
     private final Game game;
-    private final Player player;
+    private Player player;
     private final List<Sprite> sprites = new LinkedList<>();
     private final Set<Sprite> cleanUpSprites = new HashSet<>();
+    public static LinkedList<Grid> grides = new LinkedList<>();
     private final Stage stage;
     private StatusBar statusBar;
     private Pane layer;
     private Input input;
+    private Grid grid;
 
 
     public GameEngine(final String windowTitle, Game game, final Stage stage) {
         this.stage = stage;
         this.windowTitle = windowTitle;
         this.game = game;
+        this.grid = game.getGrid();
         this.player = game.getPlayer();
+        grides.add(game.getGrid());
         initialize();
         buildAndSetGameLoop();
     }
@@ -90,8 +97,28 @@ public final class GameEngine {
                 // Check keyboard actions
                 processInput(now);
 
+                if (player.newLevel()) {
+                    try {
+                        player.takeDoor(player.whichLvl());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    initialize();
+
+                    int playerLives = player.getLives();
+
+                    Position playerPosition = posDoor();
+                    int bag = player.getBombcapacity();
+                    player = new Player(game, playerPosition, playerLives, bag);
+                    sprites.add(new SpritePlayer(layer, player));
+                }
+
                 // Do actions
-                update(now);
+                try {
+                    update(now);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 createNewBombs(now);
                 checkCollision(now);
                 checkExplosions();
@@ -120,6 +147,19 @@ public final class GameEngine {
 
         };
     }
+
+    private Position posDoor(){
+        for (int i = 0; i < grid.getWidth(); i++) {
+            for (int j = 0; j < grid.getHeight(); j++) {
+                Position pos = new Position(i,j);
+                if(grid.get(pos) instanceof DoorOpenPrev){
+                    return pos;
+                }
+            }
+        }
+        return new Position(0,0);
+    }
+
     private void checkExplosions(){}
     private boolean checkBoom(Position pos) {
         if (game.getGrid().get(pos)instanceof Box || game.getGrid().get(pos)instanceof Monster|| game.getGrid().get(pos)instanceof Bonus||game.getGrid().get(pos)==null){
@@ -336,17 +376,30 @@ public final class GameEngine {
             player.requestMove(Direction.RIGHT);
         } else if (input.isMoveUp()) {
             player.requestMove(Direction.UP);
-        }else if (input.isBomb()){
-            if(player.getBombcapacity()>0) {
+        }else if (input.isBomb()) {
+            if (player.getBombcapacity() > 0) {
                 System.out.println();
                 player.lessBomb();
                 bombDestruction(3);
-
+            }
+        }else if (input.isKey()) {
+            if(game.getGrid().get(player.getDirection().nextPosition(player.getPosition())) instanceof DoorClose) {
+                System.out.println(game.getGrid().get(player.getDirection().nextPosition(player.getPosition())));
+                openDoor();
             }
             input.clear();
         }
 
         input.clear();
+    }
+
+    public void openDoor(){
+        System.out.println("Door Opened");
+
+        GameObject doornext = new DoorOpenNext(player.getDirection().nextPosition(player.getPosition()));
+        Sprite door_next = new Sprite(layer, ImageResource.getDoorNext(), doornext);
+        sprites.add(door_next);
+        player.openDoor();
     }
 
     private void showMessage(String msg, Color color) {
@@ -369,7 +422,7 @@ public final class GameEngine {
     }
 
 
-    private void update(long now) {
+    private void update(long now) throws IOException {
         player.update(now);
 
         if (player.getLives() == 0) {
@@ -381,6 +434,8 @@ public final class GameEngine {
             gameLoop.stop();
             showMessage("Gagné", Color.BLUE);
         }
+
+
     }
 
     public void cleanupSprites() {
