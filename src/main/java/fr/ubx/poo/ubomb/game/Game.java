@@ -19,7 +19,7 @@ import java.util.Properties;
 public class Game {
 
     public final int bombBagCapacity;
-    public final int monsterVelocity;
+    public  int monsterVelocity;
     public final int playerLives;
     public final int levels;
     public final long playerInvisibilityTime;

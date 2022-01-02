@@ -120,8 +120,8 @@ public class Player extends GameObject implements Movable {
             }else {
                 grid = GameEngine.grides.listIterator().next();
             }
-            int velocity = Integer.parseInt(prop.getProperty("monsterVelocity")) ;
-            prop.setProperty("monsterVelocity", String.valueOf(velocity+5));
+            game.monsterVelocity+=5;
+
         }
         else{
             System.out.println("pas la");

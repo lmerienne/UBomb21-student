@@ -10,6 +10,11 @@ import fr.ubx.poo.ubomb.game.Direction;
 import fr.ubx.poo.ubomb.game.Game;
 import fr.ubx.poo.ubomb.game.Grid;
 import fr.ubx.poo.ubomb.game.Position;
+import fr.ubx.poo.ubomb.view.Sprite;
+import fr.ubx.poo.ubomb.view.SpriteFactory;
+import fr.ubx.poo.ubomb.view.SpriteMonster;
+import javafx.scene.image.Image;
+import fr.ubx.poo.ubomb.view.ImageResource;
 
 
 import java.io.File;
@@ -37,11 +42,7 @@ public class Monster extends Decor {
     }
 
     public void update(Game game,long now) throws IOException{
-        String path = getClass().getResource("/sample").getFile();
-        InputStream input = new FileInputStream(new File(path, "config.properties"));
-        Properties prop = new Properties();
-        prop.load(input);
-        int velocity=Integer.parseInt(prop.getProperty("monsterVelocity"));
+        int velocity=game.monsterVelocity;
         int nbSeconde= 60/velocity;
         long time= 1000000000;
         if(timer.Time(now)>=time*nbSeconde){
@@ -58,7 +59,6 @@ public class Monster extends Decor {
 
     public void random() {
         direction = direction.random();
-
             }
 
 
@@ -69,10 +69,12 @@ public class Monster extends Decor {
         Position pos_before=getPosition();
         Position pos_after=direction.nextPosition(getPosition());
         game.getGrid().remove(pos_before);
+        Image image = ImageResource.getMonster(this.direction);
+        //Sprite.setImage(image);
         this.setPosition(pos_after);
 
         game.getGrid().set(pos_after,this);
-
     }
+    public Direction getDirection(){return direction;}
 
 }

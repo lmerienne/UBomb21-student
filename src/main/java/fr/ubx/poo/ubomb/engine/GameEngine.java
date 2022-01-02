@@ -112,7 +112,7 @@ public final class GameEngine {
                     int bag = player.getBombcapacity();
                     player = new Player(game, playerPosition, playerLives,bag);
                     sprites.add(new SpritePlayer(layer, player));
-                    statusBar.update(game);
+                    statusBar.update(game,player);
                         }
 
                 // Do actions
@@ -128,7 +128,7 @@ public final class GameEngine {
                 // Graphic update
                 cleanupSprites();
                 render();
-                statusBar.update(game);
+                statusBar.update(game,player);
                 for (int i=0; i<game.getGrid().getWidth();i++){
                     for (int j=0;j<game.getGrid().getHeight();j++){
                         Position pos2 = new Position(i,j);

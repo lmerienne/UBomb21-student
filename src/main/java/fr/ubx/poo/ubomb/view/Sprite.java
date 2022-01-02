@@ -37,7 +37,7 @@ public class Sprite {
         }
     }
 
-    public final void setImage(Image image) {
+    public void setImage(Image image) {
         setImage(image, null);
     }
 

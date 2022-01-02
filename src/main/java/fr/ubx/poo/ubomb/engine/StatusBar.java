@@ -76,12 +76,10 @@ public class StatusBar {
         return group;
     }
 
-    public void update(Game game) {
-        Player player = this.game.getPlayer();
+    public void update(Game game,Player player) {
         String nbLives = String.valueOf(player.getLives());
-        System.out.println("nblives"+String.valueOf(player.getLives()));
         String range= String.valueOf(player.getBombRange());
-        updateLevel(this.game.levels);
+        updateLevel(GameEngine.level+1);
         lives.setText(nbLives);
         bombRange.setText(range);
         availableBombs.setText(String.valueOf(player.getBombcapacity()));
