@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.io.IOException;
 
 
 public final class GameEngine {
@@ -99,7 +100,24 @@ public final class GameEngine {
                 cleanupSprites();
                 render();
                 statusBar.update(game);
+                for (int i=0; i<game.getGrid().getWidth();i++){
+                    for (int j=0;j<game.getGrid().getHeight();j++){
+                        Position pos2 = new Position(i,j);
+                        Decor monster=game.getGrid().get(pos2);
+
+                        if( monster instanceof Monster){
+                            try {
+                                ((Monster) monster).update(game, now);
+                            } catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }}
+
             }
+
+
         };
     }
     private void checkExplosions(){}
@@ -138,7 +156,6 @@ public final class GameEngine {
     }
     private void createNewBombs(long now) {
     }
-
     private void checkCollision(long now) {
     }
     private void bombExplosion(Position pos, Sprite ex){
@@ -150,6 +167,10 @@ public final class GameEngine {
 
             if (checkDestruction(pos) ) {
                 Decor decor = game.getGrid().get(pos);
+                if (decor instanceof Monster){
+                    decor.remove();
+
+                }
                 decor.remove();
                 game.getGrid().remove(pos);
             }
@@ -160,7 +181,7 @@ public final class GameEngine {
                         public void run() {
                             ex.getGameObject().remove();
 
-                            //sprites.remove(sprites.size()-1);
+
                         }
                     },
                     1000
@@ -298,7 +319,7 @@ public final class GameEngine {
 
 
             ///////////////////////////////////////////////////////////////////////////////////////////
-            System.out.println("nombre bombe après="+player.getBombcapacity());
+
         }
     }
 
@@ -317,6 +338,7 @@ public final class GameEngine {
             player.requestMove(Direction.UP);
         }else if (input.isBomb()){
             if(player.getBombcapacity()>0) {
+                System.out.println();
                 player.lessBomb();
                 bombDestruction(3);
 

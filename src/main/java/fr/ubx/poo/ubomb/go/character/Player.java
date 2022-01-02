@@ -12,6 +12,8 @@ import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.Movable;
 import fr.ubx.poo.ubomb.go.decor.*;
 import fr.ubx.poo.ubomb.go.decor.bonus.*;
+import fr.ubx.poo.ubomb.view.ImageResource;
+import fr.ubx.poo.ubomb.view.SpritePlayer;
 
 
 public class Player extends GameObject implements Movable {
@@ -58,7 +60,7 @@ public class Player extends GameObject implements Movable {
         if(element instanceof Tree || element instanceof Stone){
             return false;
         }
-        return game.inside(pos);
+                return game.inside(pos);
     }
 
     public void update(long now) {
@@ -96,20 +98,26 @@ public class Player extends GameObject implements Movable {
     public void takeDoor(int gotoLevel) {}
     public void takeKey() {}
     public void takeBonus(){
-        if (game.getGrid().get(getPosition()) instanceof Hearth){
+        Decor decor = (game.getGrid().get(getPosition()));
+        if ( decor instanceof Hearth){
             this.lives+=1;
+            decor.remove();
         }
-        if (game.getGrid().get(getPosition()) instanceof BombInc){
+        if (decor instanceof BombInc){
             this.bombcapacity+=1;
+            decor.remove();
         }
-        if (game.getGrid().get(getPosition()) instanceof BombDec && bombcapacity>0){
+        if (decor instanceof BombDec && bombcapacity>0){
             this.bombcapacity-=1;
+            decor.remove();
         }
-        if (game.getGrid().get(getPosition()) instanceof RangeInc){
+        if (decor instanceof RangeInc){
             this.bombrange+=1;
+            decor.remove();
         }
-        if (game.getGrid().get(getPosition()) instanceof RangeDec && bombrange>1){
+        if (decor instanceof RangeDec && bombrange>1){
             this.bombrange-=1;
+            decor.remove();
         }
 
 
