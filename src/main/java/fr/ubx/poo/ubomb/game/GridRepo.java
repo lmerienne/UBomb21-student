@@ -3,6 +3,8 @@ package fr.ubx.poo.ubomb.game;
 import fr.ubx.poo.ubomb.go.decor.*;
 import fr.ubx.poo.ubomb.go.decor.bonus.*;
 
+import java.io.FileNotFoundException;
+
 
 public abstract class GridRepo {
 
@@ -16,7 +18,7 @@ public abstract class GridRepo {
         return game;
     }
 
-    public abstract Grid load(int level, String name);
+    public abstract Grid load(int level, String name) throws FileNotFoundException;
 
     Decor processEntityCode(EntityCode entityCode, Position pos) {
         switch (entityCode) {
@@ -28,8 +30,12 @@ public abstract class GridRepo {
                 return new Tree(pos);
             case Key:
                 return new Key(pos);
+            case DoorNextClosed:
+                return new DoorClose(pos);
             case DoorPrevOpened:
-                return new Door(pos);
+                return new DoorOpenPrev(pos);
+            case DoorNextOpened:
+                return new DoorOpenNext(pos);
             case BombRangeInc:
                 return new RangeInc(pos);
             case Box:

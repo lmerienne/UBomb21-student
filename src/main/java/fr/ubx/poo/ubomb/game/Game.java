@@ -24,7 +24,7 @@ public class Game {
     public final int levels;
     public final long playerInvisibilityTime;
     public final long monsterInvisibilityTime;
-    private final Grid grid;
+    private Grid grid;
     private final Player player;
 
     public Game(String worldPath) {
@@ -40,9 +40,10 @@ public class Game {
             monsterInvisibilityTime = Long.parseLong(prop.getProperty("monsterInvisibilityTime", "1000"));
 
             // Load the world
+            String path = getClass().getResource("/sample").getFile();
             String prefix = prop.getProperty("prefix");
-            GridRepo gridRepo = new GridRepoSample(this);
-            this.grid = gridRepo.load(1, prefix + 1);
+            GridRepo gridRepo = new GridRepoFile(this);
+            this.grid = gridRepo.load(1, path + "/" + prefix);
 
             // Create the player
             String[] tokens = prop.getProperty("player").split("[ :x]+");
@@ -78,6 +79,10 @@ public class Game {
             return false;
         }
         return true;
+    }
+
+    public void setGrid(Grid grid){
+        this.grid = grid;
     }
 
 }

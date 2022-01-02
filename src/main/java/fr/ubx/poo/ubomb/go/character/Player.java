@@ -4,16 +4,20 @@
 
 package fr.ubx.poo.ubomb.go.character;
 
-import fr.ubx.poo.ubomb.game.Direction;
-import fr.ubx.poo.ubomb.game.Game;
-import fr.ubx.poo.ubomb.game.Grid;
-import fr.ubx.poo.ubomb.game.Position;
+import fr.ubx.poo.ubomb.engine.GameEngine;
+import fr.ubx.poo.ubomb.game.*;
 import fr.ubx.poo.ubomb.go.GameObject;
 import fr.ubx.poo.ubomb.go.Movable;
 import fr.ubx.poo.ubomb.go.decor.*;
 import fr.ubx.poo.ubomb.go.decor.bonus.*;
 import fr.ubx.poo.ubomb.view.ImageResource;
 import fr.ubx.poo.ubomb.view.SpritePlayer;
+
+import java.io.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
+
 
 
 public class Player extends GameObject implements Movable {
@@ -95,7 +99,39 @@ public class Player extends GameObject implements Movable {
     }
 
     // Example of methods to define by the player
-    public void takeDoor(int gotoLevel) {}
+
+    public void takeDoor(int gotoLevel) throws IOException {
+        String path = getClass().getResource("/sample").getFile();
+        InputStream input = new FileInputStream(new File(path, "config.properties"));
+        Properties prop = new Properties();
+        prop.load(input);
+        String prefix = prop.getProperty("prefix");
+        Grid grid;
+
+        System.out.println(GameEngine.grides);
+        if (gotoLevel == 1){
+            if (GameEngine.grides.size() == GameEngine.level) {
+                System.out.println("Level changed");
+                GridRepo gridRepo = new GridRepoFile(this.game);
+                grid = gridRepo.load(GameEngine.level + 1, path + "/" + prefix);
+                GameEngine.grides.add(grid);
+            }else {
+                grid = GameEngine.grides.listIterator().next();
+            }
+        }
+        else{
+
+            GameEngine.level -= 1;
+            System.out.println(GameEngine.grides.listIterator(GameEngine.level + 1).previous());
+            //GridRepo gridRepo = new GridRepoFile(this.game);
+            //grid = gridRepo.load(GameEngine.level + 1, path + "/" + prefix);
+            grid = GameEngine.grides.listIterator(GameEngine.level + 1).previous();
+
+        }
+        System.out.println(GameEngine.grides);
+        game.setGrid(grid);
+    }
+
     public void takeKey() {}
     public void takeBonus(){
         Decor decor = (game.getGrid().get(getPosition()));
@@ -148,4 +184,33 @@ public class Player extends GameObject implements Movable {
     public void moreRange(){bombrange+=1;}
     public void lessRange(){bombrange-=1;}
 
+    public void openDoor(){
+        Position pos = this.getDirection().nextPosition(this.getPosition());
+        Decor skiski = new DoorOpenNext(pos);
+        this.game.getGrid().remove(pos);
+        this.game.getGrid().set(pos, skiski);
+    }
+
+    public boolean newLevel(){
+        Grid grid = game.getGrid();
+        Decor door = grid.get(this.getPosition());
+        if(door instanceof DoorOpenNext || door instanceof DoorOpenPrev){
+            System.out.println("Change of level...");
+            return true;
+        }
+        return false;
+    }
+
+    public int whichLvl(){
+        Grid grid = game.getGrid();
+        Decor door = grid.get(this.getPosition());
+        if (door instanceof DoorOpenNext){
+            System.out.println(1);
+            GameEngine.level += 1;
+            return 1;
+        }
+        System.out.println(-1);
+        return -1;
+    }
 }
+
