@@ -6,6 +6,7 @@ package fr.ubx.poo.ubomb.view;
 
 import fr.ubx.poo.ubomb.game.Position;
 import fr.ubx.poo.ubomb.go.GameObject;
+import javafx.scene.effect.Bloom;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,6 +20,7 @@ public class Sprite {
     private ImageView imageView;
     private Image image;
     private Effect effect;
+    private Effect bloom = new Bloom();
 
     public Sprite(Pane layer, Image image, GameObject gameObject) {
         this.layer = layer;
@@ -50,6 +52,7 @@ public class Sprite {
 
     public final void render() {
         if (gameObject.isModified()) {
+            System.out.println("Boucle render");
             if (imageView != null) {
                 remove();
             }
