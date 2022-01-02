@@ -96,22 +96,24 @@ public final class GameEngine {
             public void handle(long now) {
                 // Check keyboard actions
                 processInput(now);
-
                 if (player.newLevel()) {
                     try {
                         player.takeDoor(player.whichLvl());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    sprites.clear();
                     initialize();
+
 
                     int playerLives = player.getLives();
 
                     Position playerPosition = posDoor();
                     int bag = player.getBombcapacity();
-                    player = new Player(game, playerPosition, playerLives, bag);
+                    player = new Player(game, playerPosition, playerLives,bag);
                     sprites.add(new SpritePlayer(layer, player));
-                }
+                    statusBar.update(game);
+                        }
 
                 // Do actions
                 try {
@@ -382,10 +384,11 @@ public final class GameEngine {
                 player.lessBomb();
                 bombDestruction(3);
             }
-        }else if (input.isKey()) {
+        }else if (input.isKey() && player.getKey()==1) {
             if(game.getGrid().get(player.getDirection().nextPosition(player.getPosition())) instanceof DoorClose) {
                 System.out.println(game.getGrid().get(player.getDirection().nextPosition(player.getPosition())));
                 openDoor();
+
             }
             input.clear();
         }

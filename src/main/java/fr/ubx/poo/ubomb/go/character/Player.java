@@ -26,6 +26,7 @@ public class Player extends GameObject implements Movable {
     private boolean moveRequested = false;
     private int lives,bombcapacity;
     private int bombrange=1;
+    private int key=0;
 
 
     public Player(Game game, Position position, int lives, int bombcapacity) {
@@ -110,6 +111,7 @@ public class Player extends GameObject implements Movable {
 
         System.out.println(GameEngine.grides);
         if (gotoLevel == 1){
+            System.out.println("truc");
             if (GameEngine.grides.size() == GameEngine.level) {
                 System.out.println("Level changed");
                 GridRepo gridRepo = new GridRepoFile(this.game);
@@ -118,21 +120,33 @@ public class Player extends GameObject implements Movable {
             }else {
                 grid = GameEngine.grides.listIterator().next();
             }
+            int velocity = Integer.parseInt(prop.getProperty("monsterVelocity")) ;
+            prop.setProperty("monsterVelocity", String.valueOf(velocity+5));
         }
         else{
-
+            System.out.println("pas la");
             GameEngine.level -= 1;
             System.out.println(GameEngine.grides.listIterator(GameEngine.level + 1).previous());
             //GridRepo gridRepo = new GridRepoFile(this.game);
             //grid = gridRepo.load(GameEngine.level + 1, path + "/" + prefix);
             grid = GameEngine.grides.listIterator(GameEngine.level + 1).previous();
 
+
+            int velocity = Integer.parseInt(prop.getProperty("monsterVelocity")) ;
+            prop.setProperty("monsterVelocity", String.valueOf(velocity-5));
+
         }
         System.out.println(GameEngine.grides);
         game.setGrid(grid);
     }
 
-    public void takeKey() {}
+    public void takeKey() {
+        Decor key=game.getGrid().get(getPosition());
+        if (key instanceof Key){
+            this.key+=1;
+            key.remove();
+        }
+    }
     public void takeBonus(){
         Decor decor = (game.getGrid().get(getPosition()));
         if ( decor instanceof Hearth){
@@ -155,6 +169,10 @@ public class Player extends GameObject implements Movable {
             this.bombrange-=1;
             decor.remove();
         }
+        if(decor instanceof Key){
+            this.key+=1;
+            decor.remove();;
+        }
 
 
 
@@ -162,10 +180,8 @@ public class Player extends GameObject implements Movable {
 
 
     public boolean isWinner() {
-        Player player = this.game.getPlayer();
-        Position pos = player.getPosition();
         Grid grid = game.getGrid();
-        Decor princess= grid.get(pos);
+        Decor princess= grid.get(getPosition());
         if(princess instanceof Princess ) {
             return true;
         }
@@ -189,6 +205,7 @@ public class Player extends GameObject implements Movable {
         Decor skiski = new DoorOpenNext(pos);
         this.game.getGrid().remove(pos);
         this.game.getGrid().set(pos, skiski);
+        this.key-=1;
     }
 
     public boolean newLevel(){
@@ -212,5 +229,6 @@ public class Player extends GameObject implements Movable {
         System.out.println(-1);
         return -1;
     }
+    public int getKey(){return key;}
 }
 

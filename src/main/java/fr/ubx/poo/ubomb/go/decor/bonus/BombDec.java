@@ -15,7 +15,7 @@ public class BombDec extends Bonus {
     }
 
     public void takenBy(Player player) {
-        player.takeKey();
+        player.takeBonus();
     }
 }
 

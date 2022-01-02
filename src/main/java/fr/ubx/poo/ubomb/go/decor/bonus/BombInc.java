@@ -15,6 +15,6 @@ public class BombInc extends Bonus {
     }
 
     public void takenBy(Player player) {
-        player.takeKey();
+        player.takeBonus();
     }
 }
