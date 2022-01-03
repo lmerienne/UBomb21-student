@@ -164,6 +164,9 @@ public final class GameEngine {
 
     private void checkExplosions(){}
     private boolean checkBoom(Position pos) {
+        if(game.getGrid().get(pos) instanceof Key){
+            return false;
+        }
         if (game.getGrid().get(pos)instanceof Box || game.getGrid().get(pos)instanceof Monster|| game.getGrid().get(pos)instanceof Bonus||game.getGrid().get(pos)==null){
             return true;
         }
